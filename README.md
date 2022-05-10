@@ -21,18 +21,18 @@ KVM
 Se debe instalar KVM (dentro de la maquina) virtual, por lo que se debe habilitar la virtualización anidada en el anfitrión (host) Se ha podido comprobar con hyper-V que se puede habilitar y utilizar correctamente, en VirtualBox no funciona bien (es una función Beta) y en Mac es posible que la última versión de vmware Fusion funcione correctamente (Apple cambió algunas partes de la base de su soporte de virtualización por el cambio de procesadores).
 En hyper-V se debe habilitar la virtualización anidada (de acuerdo a https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization )
 
-En una consola de PowerShell (en modo administrador se debe correr) con la maquina virtual apagada:
+3) En una consola de PowerShell (en modo administrador se debe correr) con la maquina virtual apagada:
 
       Set-VMProcessor -VMName UbuntuServer -ExposeVirtualizationExtensions $true 
       
 Donde UbuntuServer es el nombre de la maquina virtual
 
-Verificar que la maquina virtual tiene las extensiones de virtualización asistida por Hardware.
+4) Verificar que la maquina virtual tiene las extensiones de virtualización asistida por Hardware.
 
       egrep -c '(vmx|svm)' /proc/cpuinfo
       4
       
-Debe salir un valor mayor que cero Luego como siempre se deben actualizar toda la distro.
+5) Debe salir un valor mayor que cero Luego como siempre se deben actualizar toda la distro.
 
       sudo apt update
       sudo apt upgrade
