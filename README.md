@@ -16,12 +16,7 @@ Detalles de la configuracion
 
 KVM
 
-2) Para los estudiantes que tienen como sistema operativo reciben una distribución de Linux "moderna" kernel >= 4.4 pueden saltar al punto 2
-
-Se debe instalar KVM (dentro de la maquina) virtual, por lo que se debe habilitar la virtualización anidada en el anfitrión (host) Se ha podido comprobar con hyper-V que se puede habilitar y utilizar correctamente, en VirtualBox no funciona bien (es una función Beta) y en Mac es posible que la última versión de vmware Fusion funcione correctamente (Apple cambió algunas partes de la base de su soporte de virtualización por el cambio de procesadores).
-En hyper-V se debe habilitar la virtualización anidada (de acuerdo a https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization )
-
-3) En una consola de PowerShell (en modo administrador se debe correr) con la maquina virtual apagada:
+2) En una consola de PowerShell (en modo administrador se debe correr) con la maquina virtual apagada:
 
       Set-VMProcessor -VMName UbuntuServer -ExposeVirtualizationExtensions $true 
       
