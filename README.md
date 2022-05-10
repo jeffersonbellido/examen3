@@ -52,7 +52,8 @@ Y luego las herramientas de administracion
 
             echo vhost_net | sudo tee -a /etc/modules
  
-7) PASOS PRECIOS
+7) PASOS PREVIOS
+
 En la maquina virtual crear un usuario de nombre igual al que se le asigna en el modulo 2 del diplomado
 
 Luego cree un par de llaves ssh para este usuario
@@ -236,16 +237,16 @@ Y el último archivo es cloud_init.cfg
             
 Aumentar el tamaño del disco de la maquina virtual.
 
-La maquina virtual por defecto de ubuntu bionic es de aproximadamente 3G, y necesitaremos más espacio una vez creada por lo que debemos cambiar su tamaño de uso (no se cambiara el tamaño del archivo)
+12) La maquina virtual por defecto de ubuntu bionic es de aproximadamente 3G, y necesitaremos más espacio una vez creada por lo que debemos cambiar su tamaño de uso (no se cambiara el tamaño del archivo)
 
             qemu-img resize bionic-server-cloudimg-amd64.img 32G 
 
-Ejecutar Terraformar
+13) Ejecutar Terraformar
 Con todas las piezas listas solo queda ejecutar Terraform son cuatro comandos los mas utilizados: terraform init(que prepara todo el ambiente), terraform planque se encarga de crear un plan de ejecución, luego terraform applyque aplica la configuración y por último terraform destroyque destruye todo lo echo
 
 ANSIBLE
 instalacion:
-Ansible es una herramienta de configuración programada (Configuration management), que se apoya en el concepto de infraestructura como código (Infrastructure as Code). La primera versión apareció en 2012 de la mano de Michael DeHaan como un pequeño proyecto en github, que en unos meses, tubo un ascenso meteorico, (17,000 estrellas y mas de 14100 contribuidores en github).
+14) Ansible es una herramienta de configuración programada (Configuration management), que se apoya en el concepto de infraestructura como código (Infrastructure as Code). La primera versión apareció en 2012 de la mano de Michael DeHaan como un pequeño proyecto en github, que en unos meses, tubo un ascenso meteorico, (17,000 estrellas y mas de 14100 contribuidores en github).
 
 La instalación es regular, con los administradores de paquetes de cada distribución en caso de ubuntu:
 
@@ -253,19 +254,19 @@ La instalación es regular, con los administradores de paquetes de cada distribu
             sudo apt-get update
             sudo apt-get install ansible
             
-Creación del playBook
+15) Creación del playBook
 Al igual que terraform Asible trabaja con varios archivos de configuración, en este caso usaremos dos: El primero llamado simplemente inventario (en su vesrión antigua)
 
 inventario
 
             [bionic]
-            192.168.122.173 ansible_user=jorge ansible_ssh_private_key_file=./bionic.key
+            192.168.122.100 ansible_user=jeffersonbellido ansible_ssh_private_key_file=./bionic.key
 
 En este archivo podemos ver dos secciones, la primera es una agrupación de servidores llamada bionic en donde se debe poner la IP de la máquina virtual que devuelve Terraform.
 
 Las variables ansible_user , debe tener el usuario de la máquina virtual; y la variable ansible_ssh_private_key_file debe contener la ruta al archivo que contiene la llave privada de ssh; por seguridad esta llave creada en pasos anteriores debe ser copiada al archivo bionic.key
 
-El segundo archivo es el playboock propiamente dicho:
+16) El segundo archivo es el playboock propiamente dicho:
 
 playbock.yml
 
@@ -317,3 +318,40 @@ playbock.yml
                   docker_compose:
                     project_src: /tmp/authelia  
                     state: present
+
+
+17) En este archivo tenemos la referencia a ../authelia, que es el directorio donde esta el docker-compose, de la aplicación https://www.authelia.com/ que es un servidor de autenticación de código abierto.
+
+Este directorio debe tener el siguiente contenido, (también se incluye en el repositorio)
+
+                        authelia
+                        |   authelia
+                        |   |-- configuration.yml
+                        |   |-- users_database.yml
+                        |-- docker-compose.yml
+                        
+En el archivo configuration.yml se debe cambiar los parámetros de correo electrolito acorde con una cuenta gratis de https://mailtrap.io/
+
+                        smtp:
+                            username: 23e97c1d25f2b6
+                            # This secret can also be set using the env variables AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
+                            # From mailtrap.io 
+                            password: d06186cbb024b5
+                            host: smtp.mailtrap.io
+                            port: 2525
+                            sender: admin@example.com
+                            
+18) Por último ejecutamos el playboock con ansible-playboock
+
+                        ansible-playbook -i inventory playbook.yml
+
+La opción -i especifica el archivo de inventario que se usará.
+
+Para probar la aplicación autthelia se debe crear los siguientes registros en el archivo /etc/hosts del host linux
+
+                        192.168.122.xxx authelia.example.com                                                     
+                        192.168.122.xxx public.example.com                                                       
+                        192.168.122.xxx traefik.example.com                                                      
+                        192.168.122.xxx secure.example.com
+                        
+Donde el ip es el mismo que se utiliza en el archivo "inventario".
