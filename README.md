@@ -23,8 +23,10 @@ Donde UbuntuServer es el nombre de la maquina virtual
 
 4) Verificar que la maquina virtual tiene las extensiones de virtualización asistida por Hardware.
 
-      egrep -c '(vmx|svm)' /proc/cpuinfo
-      4
+
+            egrep -c '(vmx|svm)' /proc/cpuinfo
+            4
+
       
 5) Debe salir un valor mayor que cero Luego como siempre se deben actualizar toda la distro.
 
